@@ -1,0 +1,180 @@
+<?php
+include 'backend/permissao_cliente.php';
+include 'backend/conexao.php';
+
+$cliente_id = $_SESSION['id'];
+
+$stmt = $conn->prepare("SELECT nome, telefone, email, foto FROM clientes WHERE cliente_id = ?");
+$stmt->bind_param("i", $cliente_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$cliente = $result->fetch_assoc();
+
+$stmt->close();
+$conn->close();
+?>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do Usuário</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            height: 100%;
+            background: linear-gradient(to right, #1f1c2c, #928dab);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100%;
+        }
+
+        .menu {
+            width: 100vw;
+            background: #121212;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .menu .logo {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .menu .menu-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .menu .menu-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            padding: 10px 16px;
+            background: #007bff;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .menu .menu-links a:hover {
+            background: #0056b3;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 450px;
+            margin: 40px auto;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 3px solid #ccc;
+        }
+
+        input[type="file"],
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button, .back-button {
+            flex: 1;
+            padding: 12px;
+            font-size: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        button.save-button {
+            background: #28a745;
+            color: white;
+        }
+
+        button.save-button:hover {
+            background: #218838;
+        }
+
+        .back-button {
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <div class="logo">Olá, <?php echo htmlspecialchars($_SESSION['nome']); ?></div>
+        <div class="menu-links">
+            <a href="agendamentos.php">Meus Agendamentos</a>
+            <a href="barbeiros.php">Agenda</a>
+            <a href="backend/sair.php">Sair</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Meu Perfil</h2>
+        <form action="backend/atualizar_usuario.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="<?php echo $cliente_id; ?>">
+            <img src="<?php echo "backend/uploads/" . ($cliente['foto'] ?? 'foto.png'); ?>" alt="Foto do Usuário" class="profile-img">
+            <input type="file" name="foto" accept="image/*">
+            <input type="text" name="nome" value="<?php echo htmlspecialchars($cliente['nome']); ?>" required>
+            <input type="tel" name="phone" value="<?php echo htmlspecialchars($cliente['telefone']); ?>" required>
+            <input type="email" name="email" value="<?php echo htmlspecialchars($cliente['email']); ?>" required>
+            <div class="buttons">
+                <button type="submit" class="save-button">Salvar</button>
+                <a href="agendamentos.php" class="back-button">Voltar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
