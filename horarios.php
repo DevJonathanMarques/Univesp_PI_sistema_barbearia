@@ -51,7 +51,7 @@ $horarios_disponiveis = buscarHorariosDisponiveis($conn, $barbeiro_id, $data, $s
             min-height: 100%;
         }
 
-        .menu {
+        header {
             width: 100vw;
             background: #121212;
             padding: 15px 30px;
@@ -64,18 +64,18 @@ $horarios_disponiveis = buscarHorariosDisponiveis($conn, $barbeiro_id, $data, $s
             z-index: 100;
         }
 
-        .menu .logo {
+        .logo {
             color: white;
             font-size: 18px;
             font-weight: bold;
         }
 
-        .menu .menu-links {
+        nav {
             display: flex;
             gap: 12px;
         }
 
-        .menu .menu-links a {
+        nav a {
             color: white;
             text-decoration: none;
             font-size: 15px;
@@ -85,11 +85,11 @@ $horarios_disponiveis = buscarHorariosDisponiveis($conn, $barbeiro_id, $data, $s
             transition: background 0.3s;
         }
 
-        .menu .menu-links a:hover {
+        nav a:hover {
             background: #0056b3;
         }
 
-        .container {
+        main {
             background: white;
             padding: 30px;
             border-radius: 12px;
@@ -100,24 +100,28 @@ $horarios_disponiveis = buscarHorariosDisponiveis($conn, $barbeiro_id, $data, $s
             text-align: center;
         }
 
-        h2 {
+        h1 {
             color: #333;
             margin-bottom: 10px;
+            font-size: 1.8rem;
         }
 
-        h3 {
+        h2 {
             color: #666;
             margin-bottom: 20px;
         }
 
-        .schedule {
+        ul.schedule {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 20px;
             margin-top: 20px;
+            list-style: none;
+            padding: 0;
         }
 
-        .time {
+        li.time-item a {
+            display: block;
             background: #007bff;
             color: white;
             padding: 15px;
@@ -130,40 +134,50 @@ $horarios_disponiveis = buscarHorariosDisponiveis($conn, $barbeiro_id, $data, $s
             font-size: 15px;
         }
 
-        .time:hover {
+        li.time-item a:hover,
+        li.time-item a:focus {
             background: #0056b3;
+        }
+
+        p {
+            color: #444;
         }
     </style>
 </head>
 <body>
-    <div class="menu">
+    <header>
         <div class="logo">Olá, <?php echo htmlspecialchars($_SESSION['nome']); ?></div>
-        <div class="menu-links">
+        <nav aria-label="Menu principal">
             <a href="agendamentos.php">Meus Agendamentos</a>
             <a href="usuario.php">Usuário</a>
             <a href="backend/sair.php">Sair</a>
-        </div>
-    </div>
+        </nav>
+    </header>
 
-    <div class="container">
-        <h2>Selecione um horário</h2>
-        <h3>Data Selecionada: <?php echo date('d/m/Y', strtotime($data)); ?></h3>
-        <div class="schedule">
-            <?php
-                if (!empty($horarios_disponiveis)) {
-                    $label_duracao = $duracao_servico . 'min';
-                    foreach ($horarios_disponiveis as $horario) {
+    <main>
+        <h1>Selecione um horário</h1>
+        <h2>Data selecionada: <?php echo date('d/m/Y', strtotime($data)); ?></h2>
+
+        <?php if (!empty($horarios_disponiveis)): ?>
+            <ul class="schedule" aria-label="Horários disponíveis">
+                <?php 
+                    $label_duracao = $duracao_servico . ' minutos';
+                    foreach ($horarios_disponiveis as $horario): 
                         $url = "finalizar.php?date=" . urlencode($data)
                              . "&time=" . urlencode($horario)
                              . "&barbeiro_id=" . urlencode($barbeiro_id)
                              . "&servico_id=" . urlencode($servico_id);
-                        echo "<a href='$url' class='time'>{$horario} ({$label_duracao})</a>";
-                    }
-                } else {
-                    echo "<p>Nenhum horário disponível para esta data.</p>";
-                }
-            ?>
-        </div>
-    </div>
+                ?>
+                    <li class="time-item">
+                        <a href="<?php echo $url; ?>" aria-label="Horário disponível às <?php echo $horario; ?>, duração <?php echo $label_duracao; ?>">
+                            <?php echo "{$horario} ({$duracao_servico}min)"; ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <p>Nenhum horário disponível para esta data.</p>
+        <?php endif; ?>
+    </main>
 </body>
 </html>

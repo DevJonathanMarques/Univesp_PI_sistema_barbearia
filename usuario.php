@@ -37,8 +37,8 @@ $conn->close();
             min-height: 100%;
         }
 
-        .menu {
-            width: 100vw;
+        nav.menu {
+            width: 100%;
             background: #121212;
             padding: 15px 30px;
             display: flex;
@@ -71,11 +71,14 @@ $conn->close();
             transition: background 0.3s;
         }
 
-        .menu .menu-links a:hover {
+        .menu .menu-links a:hover,
+        .menu .menu-links a:focus {
             background: #0056b3;
+            outline: 2px solid #fff;
+            outline-offset: 2px;
         }
 
-        .container {
+        main.container {
             background: white;
             padding: 30px;
             border-radius: 12px;
@@ -100,13 +103,22 @@ $conn->close();
             border: 3px solid #ccc;
         }
 
+        label {
+            display: block;
+            text-align: left;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            margin-top: 10px;
+        }
+
         input[type="file"],
         input[type="text"],
         input[type="tel"],
         input[type="email"] {
             width: 100%;
             padding: 12px;
-            margin: 10px 0;
+            margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 8px;
             font-size: 14px;
@@ -115,7 +127,7 @@ $conn->close();
         .buttons {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 25px;
         }
 
         button, .back-button {
@@ -126,6 +138,7 @@ $conn->close();
             border-radius: 8px;
             cursor: pointer;
             text-align: center;
+            transition: background 0.3s;
         }
 
         button.save-button {
@@ -133,8 +146,11 @@ $conn->close();
             color: white;
         }
 
-        button.save-button:hover {
+        button.save-button:hover,
+        button.save-button:focus {
             background: #218838;
+            outline: 2px solid #fff;
+            outline-offset: 2px;
         }
 
         .back-button {
@@ -146,35 +162,54 @@ $conn->close();
             justify-content: center;
         }
 
-        .back-button:hover {
+        .back-button:hover,
+        .back-button:focus {
             background: #0056b3;
+            outline: 2px solid #fff;
+            outline-offset: 2px;
         }
     </style>
 </head>
 <body>
-    <div class="menu">
+    <nav class="menu" aria-label="Menu principal">
         <div class="logo">Olá, <?php echo htmlspecialchars($_SESSION['nome']); ?></div>
         <div class="menu-links">
             <a href="agendamentos.php">Meus Agendamentos</a>
             <a href="barbeiros.php">Agenda</a>
             <a href="backend/sair.php">Sair</a>
         </div>
-    </div>
+    </nav>
 
-    <div class="container">
-        <h2>Meu Perfil</h2>
-        <form action="backend/atualizar_usuario.php" method="POST" enctype="multipart/form-data">
+    <main class="container" role="main">
+        <h2 id="titulo-perfil">Meu Perfil</h2>
+
+        <form action="backend/atualizar_usuario.php" method="POST" enctype="multipart/form-data" aria-labelledby="titulo-perfil">
             <input type="hidden" name="id" value="<?php echo $cliente_id; ?>">
-            <img src="<?php echo "backend/uploads/" . ($cliente['foto'] ?? 'foto.png'); ?>" alt="Foto do Usuário" class="profile-img">
-            <input type="file" name="foto" accept="image/*">
-            <input type="text" name="nome" value="<?php echo htmlspecialchars($cliente['nome']); ?>" required>
-            <input type="tel" name="phone" value="<?php echo htmlspecialchars($cliente['telefone']); ?>" required>
-            <input type="email" name="email" value="<?php echo htmlspecialchars($cliente['email']); ?>" required>
+
+            <img 
+                src="<?php echo 'backend/uploads/' . ($cliente['foto'] ?? 'foto.png'); ?>" 
+                alt="Foto atual do usuário <?php echo htmlspecialchars($cliente['nome']); ?>" 
+                class="profile-img"
+                id="foto-perfil"
+            >
+
+            <label for="foto">Alterar foto do perfil</label>
+            <input type="file" id="foto" name="foto" accept="image/*" aria-describedby="foto-perfil">
+
+            <label for="nome">Nome completo</label>
+            <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($cliente['nome']); ?>" required>
+
+            <label for="phone">Telefone</label>
+            <input type="tel" id="phone" name="phone" value="<?php echo htmlspecialchars($cliente['telefone']); ?>" required>
+
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($cliente['email']); ?>" required>
+
             <div class="buttons">
                 <button type="submit" class="save-button">Salvar</button>
-                <a href="agendamentos.php" class="back-button">Voltar</a>
+                <a href="agendamentos.php" class="back-button" role="button">Voltar</a>
             </div>
         </form>
-    </div>
+    </main>
 </body>
 </html>

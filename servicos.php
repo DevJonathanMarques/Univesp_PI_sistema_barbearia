@@ -35,7 +35,7 @@ $servicos = buscarServicos($barbeiro_id);
             min-height: 100%;
         }
 
-        .menu {
+        header {
             width: 100vw;
             background: #121212;
             padding: 15px 30px;
@@ -48,18 +48,18 @@ $servicos = buscarServicos($barbeiro_id);
             z-index: 100;
         }
 
-        .menu .logo {
+        .logo {
             color: white;
             font-size: 18px;
             font-weight: bold;
         }
 
-        .menu .menu-links {
+        nav {
             display: flex;
             gap: 12px;
         }
 
-        .menu .menu-links a {
+        nav a {
             color: white;
             text-decoration: none;
             font-size: 15px;
@@ -69,11 +69,11 @@ $servicos = buscarServicos($barbeiro_id);
             transition: background 0.3s;
         }
 
-        .menu .menu-links a:hover {
+        nav a:hover {
             background: #0056b3;
         }
 
-        .container {
+        main {
             background: white;
             padding: 30px;
             border-radius: 12px;
@@ -84,17 +84,28 @@ $servicos = buscarServicos($barbeiro_id);
             text-align: center;
         }
 
-        h2 {
+        h1 {
             color: #333;
             margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        fieldset {
+            border: none;
+            text-align: left;
+        }
+
+        legend {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
         }
 
         .services {
             display: flex;
             flex-direction: column;
             gap: 15px;
-            margin-top: 20px;
-            text-align: left;
+            margin-top: 10px;
         }
 
         .service {
@@ -105,6 +116,8 @@ $servicos = buscarServicos($barbeiro_id);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             transition: transform 0.2s, background 0.3s;
+            display: flex;
+            align-items: center;
         }
 
         .service:hover {
@@ -134,29 +147,37 @@ $servicos = buscarServicos($barbeiro_id);
     </style>
 </head>
 <body>
-    <div class="menu">
+    <header>
         <div class="logo">Olá, <?php echo htmlspecialchars($_SESSION['nome']); ?></div>
-        <div class="menu-links">
+        <nav aria-label="Menu principal">
             <a href="agendamentos.php">Meus Agendamentos</a>
             <a href="usuario.php">Usuário</a>
             <a href="backend/sair.php">Sair</a>
-        </div>
-    </div>
+        </nav>
+    </header>
 
-    <div class="container">
-        <h2>Selecione um serviço</h2>
+    <main>
+        <h1>Selecione um Serviço</h1>
 
-        <form action="agenda.php" method="GET" onsubmit="return validateForm()">
+        <form action="agenda.php" method="GET" onsubmit="return validateForm()" aria-labelledby="form-title">
             <input type="hidden" name="barbeiro_id" value="<?php echo $barbeiro_id; ?>">
 
-            <div class="services">
-                <?php foreach ($servicos as $servico): ?>
-                    <label class="service">
-                        <input type="radio" name="servico_id" value="<?php echo $servico['servico_id']; ?>">
-                        <?php echo "{$servico['descricao']} - R$" . number_format($servico['preco'], 2, ',', '.'); ?>
-                    </label>
-                <?php endforeach; ?>
-            </div>
+            <fieldset>
+                <legend id="form-title">Lista de serviços disponíveis</legend>
+
+                <div class="services">
+                    <?php foreach ($servicos as $servico): ?>
+                        <label class="service">
+                            <input 
+                                type="radio" 
+                                name="servico_id" 
+                                value="<?php echo $servico['servico_id']; ?>">
+                            <?php echo htmlspecialchars($servico['descricao']); ?> — 
+                            R$<?php echo number_format($servico['preco'], 2, ',', '.'); ?>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
+            </fieldset>
 
             <button type="submit">Continuar</button>
         </form>
@@ -171,6 +192,6 @@ $servicos = buscarServicos($barbeiro_id);
                 return true;
             }
         </script>
-    </div>
+    </main>
 </body>
 </html>

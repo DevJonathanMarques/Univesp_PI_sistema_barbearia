@@ -138,6 +138,7 @@ $stmt->bind_param("iiis", $cliente_id, $barbeiro_id, $servico_id, $inicio_agenda
 if ($stmt->execute()) {
     $stmt->close();
     $conn->close();
+    include 'pagamento.php';
     header("Location: ../confirmado.php");
     exit;
 } else {

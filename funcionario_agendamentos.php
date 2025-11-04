@@ -65,7 +65,7 @@ include 'backend/buscar_agendamentos.php';
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
             width: 90%;
-            max-width: 600px;
+            max-width: 700px;
             margin: 40px auto;
         }
 
@@ -76,8 +76,8 @@ include 'backend/buscar_agendamentos.php';
         }
 
         .appointment {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 25% 35% 40%;
             align-items: center;
             padding: 12px 15px;
             border-bottom: 1px solid #eee;
@@ -85,6 +85,14 @@ include 'backend/buscar_agendamentos.php';
             border-radius: 6px;
             margin-bottom: 10px;
             font-size: 14px;
+            text-align: left;
+            gap: 10px;
+        }
+
+        .appointment span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .appointment:last-child {
@@ -116,15 +124,9 @@ include 'backend/buscar_agendamentos.php';
         <?php if (!empty($agendamentos)): ?>
             <?php foreach ($agendamentos as $agendamento): ?>
                 <div class="appointment">
-                    <span>
-                        <?= date('d/m - H:i', strtotime($agendamento['data_agendamento'])) ?>
-                    </span>
-                    <span>
-                        <?= htmlspecialchars($agendamento['cliente']) ?>
-                    </span>
-                    <span>
-                        <?= htmlspecialchars($agendamento['servico']) ?>
-                    </span>
+                    <span><?= date('d/m - H:i', strtotime($agendamento['data_agendamento'])) ?></span>
+                    <span><?= htmlspecialchars($agendamento['cliente']) ?></span>
+                    <span><?= htmlspecialchars($agendamento['servico']) ?></span>
                 </div>
             <?php endforeach; ?>
         <?php else: ?>

@@ -26,7 +26,7 @@ include 'backend/listar_barbeiros.php';
             min-height: 100%;
         }
 
-        .menu {
+        header {
             width: 100vw;
             background: #121212;
             padding: 15px 30px;
@@ -39,18 +39,18 @@ include 'backend/listar_barbeiros.php';
             z-index: 100;
         }
 
-        .menu .logo {
+        .logo {
             color: white;
             font-size: 18px;
             font-weight: bold;
         }
 
-        .menu .menu-links {
+        nav {
             display: flex;
             gap: 12px;
         }
 
-        .menu .menu-links a {
+        nav a {
             color: white;
             text-decoration: none;
             font-size: 15px;
@@ -60,11 +60,11 @@ include 'backend/listar_barbeiros.php';
             transition: background 0.3s;
         }
 
-        .menu .menu-links a:hover {
+        nav a:hover {
             background: #0056b3;
         }
 
-        .container {
+        main {
             background: white;
             padding: 30px;
             border-radius: 12px;
@@ -75,18 +75,19 @@ include 'backend/listar_barbeiros.php';
             text-align: center;
         }
 
-        h2 {
+        h1 {
             color: #333;
             margin-bottom: 25px;
+            font-size: 1.8rem;
         }
 
-        .barbeiros-grid {
+        section.barbeiros-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
             gap: 25px;
         }
 
-        .card {
+        article.card {
             background: #f8f9fa;
             border-radius: 12px;
             padding: 20px;
@@ -94,7 +95,7 @@ include 'backend/listar_barbeiros.php';
             transition: transform 0.2s;
         }
 
-        .card:hover {
+        article.card:hover {
             transform: translateY(-5px);
         }
 
@@ -102,7 +103,7 @@ include 'backend/listar_barbeiros.php';
             width: 100%;
             height: 250px;
             object-fit: contain;
-            background-color: #eaeaea; /* fundo neutro para imagens menores */
+            background-color: #eaeaea;
             border-radius: 8px;
             margin-bottom: 15px;
         }
@@ -120,7 +121,6 @@ include 'backend/listar_barbeiros.php';
             border: none;
             padding: 10px 20px;
             border-radius: 8px;
-            cursor: pointer;
             text-decoration: none;
             display: inline-block;
             font-size: 14px;
@@ -133,26 +133,32 @@ include 'backend/listar_barbeiros.php';
     </style>
 </head>
 <body>
-    <div class="menu">
+    <header>
         <div class="logo">Olá, <?php echo htmlspecialchars($_SESSION['nome']); ?></div>
-        <div class="menu-links">
+        <nav aria-label="Menu principal">
             <a href="agendamentos.php">Meus Agendamentos</a>
             <a href="usuario.php">Usuário</a>
             <a href="backend/sair.php">Sair</a>
-        </div>
-    </div>
+        </nav>
+    </header>
 
-    <div class="container">
-        <h2>Escolha um Barbeiro</h2>
-        <div class="barbeiros-grid">
+    <main>
+        <h1>Escolha um Barbeiro</h1>
+        <section class="barbeiros-grid" aria-label="Lista de barbeiros disponíveis">
             <?php foreach ($funcionarios as $funcionario): ?>
-                <div class="card">
-                    <img src="backend/uploads/<?php echo $funcionario['foto']; ?>" alt="Foto do Barbeiro" class="profile-img">
+                <article class="card">
+                    <img 
+                        src="backend/uploads/<?php echo $funcionario['foto']; ?>" 
+                        alt="Foto do barbeiro <?php echo htmlspecialchars($funcionario['nome']); ?>" 
+                        class="profile-img">
                     <div class="nome"><?php echo htmlspecialchars($funcionario['nome']); ?></div>
-                    <a class="btn-escolher" href="servicos.php?barbeiro_id=<?php echo $funcionario['funcionario_id']; ?>">Escolher</a>
-                </div>
+                    <a class="btn-escolher" 
+                       href="servicos.php?barbeiro_id=<?php echo $funcionario['funcionario_id']; ?>">
+                       Escolher o barbeiro <?php echo htmlspecialchars($funcionario['nome']); ?>
+                    </a>
+                </article>
             <?php endforeach; ?>
-        </div>
-    </div>
+        </section>
+    </main>
 </body>
 </html>

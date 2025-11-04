@@ -38,7 +38,7 @@ if (isset($_SESSION['permissao'])) {
             color: #333;
         }
 
-        .login-container {
+        main {
             background-color: #fff;
             padding: 40px 30px;
             border-radius: 16px;
@@ -48,32 +48,42 @@ if (isset($_SESSION['permissao'])) {
             text-align: center;
         }
 
-        .login-container h2 {
+        h1 {
             margin-bottom: 24px;
             color: #333;
+            font-size: 1.5rem;
         }
 
         form {
             display: flex;
             flex-direction: column;
+            align-items: stretch;
+        }
+
+        label {
+            text-align: left;
+            margin-top: 10px;
+            font-weight: 500;
         }
 
         input {
             padding: 12px 15px;
-            margin: 10px 0;
+            margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 8px;
             font-size: 16px;
         }
 
-        button {
+        button, a.button-link {
             padding: 12px;
-            margin-top: 10px;
+            margin-top: 15px;
             border: none;
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
             transition: background 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
         }
 
         button[type="submit"] {
@@ -85,25 +95,30 @@ if (isset($_SESSION['permissao'])) {
             background-color: #37324d;
         }
 
-        .register-button {
+        a.button-link {
             background-color: #4caf50;
             color: #fff;
         }
 
-        .register-button:hover {
+        a.button-link:hover {
             background-color: #3e8e41;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Entrar no Sistema</h2>
+    <main>
+        <h1>Entrar no Sistema</h1>
         <form action="backend/login.php" method="POST" enctype="multipart/form-data">
-            <input type="text" name="usuario" placeholder="E-mail" required>
-            <input type="password" name="senha" placeholder="Senha" required>
+            <label for="usuario">E-mail</label>
+            <input type="text" id="usuario" name="usuario" placeholder="Digite seu e-mail" required>
+
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+
             <button type="submit">Entrar</button>
         </form>
-        <button class="register-button" onclick="window.location.href='cadastro.php'">Criar Cadastro</button>
-    </div>
+
+        <a href="cadastro.php" class="button-link">Criar Cadastro</a>
+    </main>
 </body>
 </html>

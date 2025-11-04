@@ -36,7 +36,7 @@ $datas_disponiveis = buscarDatasDisponiveis($barbeiro_id);
             min-height: 100%;
         }
 
-        .menu {
+        header {
             width: 100vw;
             background: #121212;
             padding: 15px 30px;
@@ -49,18 +49,18 @@ $datas_disponiveis = buscarDatasDisponiveis($barbeiro_id);
             z-index: 100;
         }
 
-        .menu .logo {
+        .logo {
             color: white;
             font-size: 18px;
             font-weight: bold;
         }
 
-        .menu .menu-links {
+        nav {
             display: flex;
             gap: 12px;
         }
 
-        .menu .menu-links a {
+        nav a {
             color: white;
             text-decoration: none;
             font-size: 15px;
@@ -70,11 +70,11 @@ $datas_disponiveis = buscarDatasDisponiveis($barbeiro_id);
             transition: background 0.3s;
         }
 
-        .menu .menu-links a:hover {
+        nav a:hover {
             background: #0056b3;
         }
 
-        .container {
+        main {
             background: white;
             padding: 30px;
             border-radius: 12px;
@@ -85,19 +85,23 @@ $datas_disponiveis = buscarDatasDisponiveis($barbeiro_id);
             text-align: center;
         }
 
-        h2 {
+        h1 {
             color: #333;
             margin-bottom: 25px;
+            font-size: 1.8rem;
         }
 
-        .calendar {
+        ul.calendar {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             gap: 20px;
             margin-top: 20px;
+            list-style: none;
+            padding: 0;
         }
 
-        .day {
+        li.day-item a {
+            display: block;
             background: #007bff;
             color: white;
             padding: 15px;
@@ -110,42 +114,61 @@ $datas_disponiveis = buscarDatasDisponiveis($barbeiro_id);
             font-size: 16px;
         }
 
-        .day:hover {
+        li.day-item a:hover,
+        li.day-item a:focus {
             background: #0056b3;
+        }
+
+        p {
+            color: #444;
+            font-size: 1rem;
         }
     </style>
 </head>
 <body>
-    <div class="menu">
+    <header>
         <div class="logo">Olá, <?php echo htmlspecialchars($_SESSION['nome']); ?></div>
-        <div class="menu-links">
+        <nav aria-label="Menu principal">
             <a href="agendamentos.php">Meus Agendamentos</a>
             <a href="usuario.php">Usuário</a>
             <a href="backend/sair.php">Sair</a>
-        </div>
-    </div>
+        </nav>
+    </header>
 
-    <div class="container">
-        <h2>Selecione um dia</h2>
-        <div class="calendar">
-            <?php
-                setlocale(LC_TIME, 'pt_BR.UTF-8');
-                date_default_timezone_set('America/Sao_Paulo');
+    <main>
+        <h1>Selecione um Dia</h1>
 
-                $dias_semana = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+        <?php
+            setlocale(LC_TIME, 'pt_BR.UTF-8');
+            date_default_timezone_set('America/Sao_Paulo');
 
-                if (!empty($datas_disponiveis)) {
-                    foreach ($datas_disponiveis as $data) {
-                        $timestamp = strtotime($data);
-                        $dia_semana = $dias_semana[date('w', $timestamp)];
-                        $data_formatada = date('d/m', $timestamp);
-                        echo "<a href='horarios.php?date={$data}&barbeiro_id={$barbeiro_id}&servico_id={$servico_id}' class='day'>{$dia_semana} {$data_formatada}</a>";
-                    }
-                } else {
-                    echo "<p>Nenhum horário disponível nos próximos dias.</p>";
-                }
-            ?>
-        </div>
-    </div>
+            // Abreviações e nomes completos
+            $dias_semana_abrev = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+            $dias_semana_completo = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+
+            if (!empty($datas_disponiveis)):
+        ?>
+            <ul class="calendar" aria-label="Dias disponíveis para agendamento">
+                <?php foreach ($datas_disponiveis as $data): 
+                    $timestamp = strtotime($data);
+                    $dia_numero = date('w', $timestamp);
+                    $dia_semana_abrev = $dias_semana_abrev[$dia_numero];
+                    $dia_semana_completo = $dias_semana_completo[$dia_numero];
+                    $data_formatada = date('d/m', $timestamp);
+                    $data_completa = $dia_semana_completo . ", " . strftime('%d de %B', $timestamp);
+                ?>
+                    <li class="day-item">
+                        <a href="horarios.php?date=<?php echo $data; ?>&barbeiro_id=<?php echo $barbeiro_id; ?>&servico_id=<?php echo $servico_id; ?>"
+                        aria-label="<?php echo $data_completa; ?>">
+                            <?php echo "{$dia_semana_abrev} {$data_formatada}"; ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <p>Nenhum horário disponível nos próximos dias.</p>
+        <?php endif; ?>
+    </main>
+    
 </body>
 </html>

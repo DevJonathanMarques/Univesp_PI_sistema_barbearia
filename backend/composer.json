@@ -1,0 +1,17 @@
+{
+    "name": "jonta/backend",
+    "autoload": {
+        "psr-4": {
+            "Jonta\\Backend\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jonathan",
+            "email": "devprojhow@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^11.5"
+    }
+}
