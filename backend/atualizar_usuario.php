@@ -29,6 +29,8 @@ if ($foto) {
 
 if ($stmt->execute()) {
     header("Location: ../usuario.php?atualizado=1");
+    $_SESSION['nome'] = $_POST["nome"];
+    $_SESSION['usuario'] = $_POST["email"];
 } else {
     echo "Erro ao atualizar: " . $stmt->error;
 }

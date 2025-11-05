@@ -8,7 +8,7 @@ if (!isset($_SESSION["id"])) {
 
 $funcionario_id = $_SESSION["id"];
 
-// Preparar a query para pegar todos os agendamentos do funcionário logado
+// Preparar a query para pegar apenas agendamentos futuros do funcionário logado
 $query = "
     SELECT 
         a.agendamento_id,
@@ -23,6 +23,7 @@ $query = "
     JOIN servicos s ON a.servico_id = s.servico_id
     JOIN funcionarios f ON a.funcionario_id = f.funcionario_id
     WHERE a.funcionario_id = ?
+      AND a.data_agendamento >= NOW()  -- 🔥 só agendamentos futuros ou atuais
     ORDER BY a.data_agendamento ASC
 ";
 

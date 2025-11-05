@@ -187,7 +187,7 @@ $conn->close();
             <input type="hidden" name="id" value="<?php echo $cliente_id; ?>">
 
             <img 
-                src="<?php echo 'backend/uploads/' . ($cliente['foto'] ?? 'foto.png'); ?>" 
+                src="<?php echo 'backend/' . $cliente['foto']; ?>" 
                 alt="Foto atual do usuário <?php echo htmlspecialchars($cliente['nome']); ?>" 
                 class="profile-img"
                 id="foto-perfil"
